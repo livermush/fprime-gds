@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/require-ai-disclosure.sh",
+        "matcher": "gh pr create",
+        "failClosed": true
+      }
+    ]
+  }
+}

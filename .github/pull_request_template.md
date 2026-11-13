@@ -1,22 +1,12 @@
-| | |
-|:---|:---|
-|**_Related Issue(s)_**|  |
-|**_Has Unit Tests (y/n)_**|  |
-|**_Documentation Included (y/n)_**|  |
+## Summary
+<!-- Describe the issue fixed and root cause -->
 
----
-## Change Description
+## Verification
+<!-- Describe pytest regression tests run -->
 
-A description of the changes contained in the PR.
+## Governance & AI Disclosure
+| Field | Value |
+|---|---|
+| Generative AI Used | AI |
 
-## Rationale
-
-A rationale for this change. e.g. fixes bug, or most projects need XYZ feature.
-
-## Testing/Review Recommendations
-
-Fill in testing procedures, specific items to focus on for review, or other info to help the team verify these changes are flight-quality.
-
-## Future Work
-
-Note any additional work that will be done relating to this issue.
+IAMAI
