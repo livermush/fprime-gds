@@ -4,9 +4,9 @@
 ## Verification
 <!-- Describe pytest regression tests run -->
 
-## Governance & AI Disclosure
-| Field | Value |
-|---|---|
-| Generative AI Used | AI |
+| | |
+|:---|:---|
+|**_AI Used (y/n)_**|  |
 
-IAMAI
+## AI Usage
+<!-- Per AI_POLICY.md: type of assistance, scope (files/functions), tool(s) used, and level of modification -->
