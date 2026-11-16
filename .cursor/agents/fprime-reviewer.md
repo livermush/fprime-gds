@@ -1,7 +1,7 @@
 ---
 name: fprime-reviewer
 description: Read-only F Prime code and parity reviewer. Use before opening a pull request to audit diffs against flight CCSDS contracts, minimal diff rules, log-string stability, and test-first coverage.
-model: inherit
+model: grok-4.7[reasoning_effort=high]
 readonly: true
 ---
 
