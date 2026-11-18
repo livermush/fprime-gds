@@ -1,7 +1,9 @@
 import logging
 
 import pytest
-from fprime_gds.common.communication.ccsds.space_packet import SpacePacketFramerDeframer
+from fprime_gds.common.communication.ccsds.space_packet import (
+    SpacePacketFramerDeframer,
+)
 from fprime_gds.common.communication.ccsds.chain import RawSpacePacketFramerDeframer
 from spacepackets.ccsds.spacepacket import SpacePacketHeader, PacketType, SpacePacket
 from fprime_gds.common.utils.config_manager import ConfigManager
@@ -98,6 +100,19 @@ def test_deframe_sequence_count_warning(framer_deframer, caplog):
         assert caplog.records[0].getMessage() == "APID 256 received sequence count: 3 (expected: 1)"
         assert framer_deframer.deframe(make_space_packet(0x100, 4, b"c"))[0] == b"c"
         assert len(caplog.records) == 1
+
+
+def test_deframe_sequence_count_resync_wraps_at_14_bits(framer_deframer, caplog):
+    """After resync at max sequence count, next expected wraps to zero (flight calculateNextSeqCount)."""
+    apid = 0x100
+    maximum = SpacePacketFramerDeframer.SEQUENCE_COUNT_MAXIMUM
+    with caplog.at_level(logging.WARNING, logger="framing"):
+        framer_deframer.deframe(make_space_packet(apid, maximum - 1, b"gap"))[0]
+        assert len(caplog.records) == 1
+        assert "expected: 0" in caplog.records[0].getMessage()
+        framer_deframer.deframe(make_space_packet(apid, 0, b"after-wrap"))[0]
+        assert len(caplog.records) == 1
+
 
 def test_chain_deframe_valid_packet(chain):
     """Test the raw-space-packet chain deframing a packet surrounded by garbage."""
