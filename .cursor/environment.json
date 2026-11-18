@@ -1,0 +1,4 @@
+{
+  "repositoryDependencies": ["github.com/livermush/fprime"],
+  "install": "bash .cursor/cloud-install.sh"
+}
