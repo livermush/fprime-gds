@@ -8,6 +8,21 @@
         "timeout": 120,
         "failClosed": true
       }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": ".cursor/hooks/mcp-pr-gate.sh",
+        "timeout": 15,
+        "failClosed": true
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": ".cursor/hooks/mcp-pr-gate.sh",
+        "matcher": "^MCP:",
+        "timeout": 15,
+        "failClosed": true
+      }
     ]
   }
 }
