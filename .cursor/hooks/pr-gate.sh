@@ -32,7 +32,7 @@ fi
 if ! printf '%s' "$COMMAND" | grep -q "$TOKEN"; then
   reply deny \
     "PR gate: blocked, AI disclosure token missing (see AI_POLICY.md)." \
-    "Blocked by the PR gate hook: the gh pr create command is missing the required AI disclosure. Read AI_POLICY.md and retry with a compliant --title/--body."
+    "Blocked by the PR gate hook: the gh pr create command is missing the required AI disclosure. Read AI_POLICY.md and retry gh pr create with the IAMAI line added to --body (keep any requested wording, then append it). Do not open the PR another way (MCP or connector tools, the editor PR form, the web UI, or a compare link)."
 fi
 
 # Rule 2: CCSDS tests must pass. Run them; never trust a claim.
