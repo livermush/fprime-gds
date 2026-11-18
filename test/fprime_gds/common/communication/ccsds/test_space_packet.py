@@ -99,6 +99,23 @@ def test_deframe_sequence_count_warning(framer_deframer, caplog):
         assert framer_deframer.deframe(make_space_packet(0x100, 4, b"c"))[0] == b"c"
         assert len(caplog.records) == 1
 
+
+def test_deframe_sequence_count_resync_wraps_at_rollover(framer_deframer, caplog):
+    """Resync after a gap must wrap the 14-bit sequence count like flight ApidManager."""
+    apid = 0x100
+    rollover = SpacePacketFramerDeframer.SEQUENCE_COUNT_MAXIMUM - 1
+    with caplog.at_level(logging.WARNING, logger="framing"):
+        assert framer_deframer.deframe(make_space_packet(apid, 0, b"first"))[0] == b"first"
+        assert framer_deframer.deframe(make_space_packet(apid, rollover, b"last"))[0] == b"last"
+        # Rollover packet should match without a false high expected count.
+        assert framer_deframer.deframe(make_space_packet(apid, 0, b"roll"))[0] == b"roll"
+        rollover_warnings = [
+            r.getMessage()
+            for r in caplog.records
+            if "expected: 16384" in r.getMessage()
+        ]
+        assert rollover_warnings == []
+
 def test_chain_deframe_valid_packet(chain):
     """Test the raw-space-packet chain deframing a packet surrounded by garbage."""
     payload = b"0123456789"
