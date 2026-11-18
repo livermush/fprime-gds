@@ -99,6 +99,17 @@ def test_deframe_sequence_count_warning(framer_deframer, caplog):
         assert framer_deframer.deframe(make_space_packet(0x100, 4, b"c"))[0] == b"c"
         assert len(caplog.records) == 1
 
+def test_deframe_sequence_count_wrap_after_gap(framer_deframer, caplog):
+    """After a gap at max 14-bit count, rollover to 0 must not warn with expected 16384."""
+    with caplog.at_level(logging.WARNING, logger="framing"):
+        assert framer_deframer.deframe(make_space_packet(0x100, 0, b"a"))[0] == b"a"
+        assert len(caplog.records) == 0
+        assert framer_deframer.deframe(make_space_packet(0x100, 16383, b"b"))[0] == b"b"
+        assert len(caplog.records) == 1
+        assert caplog.records[0].getMessage() == "APID 256 received sequence count: 16383 (expected: 1)"
+        assert framer_deframer.deframe(make_space_packet(0x100, 0, b"c"))[0] == b"c"
+        assert len(caplog.records) == 1
+
 def test_chain_deframe_valid_packet(chain):
     """Test the raw-space-packet chain deframing a packet surrounded by garbage."""
     payload = b"0123456789"
