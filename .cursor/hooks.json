@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/pr-gate.sh",
+        "matcher": "gh\\s+pr\\s+create",
+        "timeout": 120,
+        "failClosed": true
+      }
+    ]
+  }
+}
