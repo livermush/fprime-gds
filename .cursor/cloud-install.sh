@@ -4,6 +4,7 @@
 #   <parent>/fprime-gds  (this repo, with .venv)   <parent>/fprime  (flight source, read-only reference)
 set -euo pipefail
 cd "$(dirname "$0")/.."
+chmod +x .cursor/hooks/*.sh 2>/dev/null || true   # hooks must stay executable even if a web/API commit dropped the bit
 # 1. Flight source next to the repo, so ../fprime/Svc/Ccsds/... resolves like on the laptop.
 [ -d ../fprime/.git ] || git clone -q --depth 1 --branch devel https://github.com/livermush/fprime.git ../fprime
 # 2. Python venv. The stock image may lack python3-venv, so fall back to virtualenv.
