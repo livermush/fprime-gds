@@ -16,6 +16,8 @@ Verify every item below:
 5. **PR Hygiene (pull requests only):** Does the description carry the `IAMAI` disclosure from `AI_POLICY.md`, and does it close or link its own sub-issue rather than the parent issue? A `Closes #<parent>` is a FAIL, because merging it would close the parent early.
 
 Output:
+- Start with `## Summary`: a table with one row per PR (or one row for a local diff): PR | MERGE or HOLD | one plain-English sentence a non-engineer could follow, no file paths or code. Then one sentence on merge order. Keep the summary under 8 lines.
+- Then `## Details`, with everything below.
 - A checklist table: item | PASS or FAIL | file:line evidence.
 - `PR blockers:` followed by each blocker, or `None`.
 - At most 3 non-blocking notes.
