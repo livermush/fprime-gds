@@ -99,6 +99,24 @@ def test_deframe_sequence_count_warning(framer_deframer, caplog):
         assert framer_deframer.deframe(make_space_packet(0x100, 4, b"c"))[0] == b"c"
         assert len(caplog.records) == 1
 
+def test_deframe_sequence_count_resync_wraps_at_maximum(framer_deframer, caplog):
+    """After a gap at 14-bit max, resync wraps so the next seq 0 does not spuriously warn."""
+    apid = 0x100
+    with caplog.at_level(logging.WARNING, logger="framing"):
+        assert (
+            framer_deframer.deframe(make_space_packet(apid, 16383, b"jump"))[0]
+            == b"jump"
+        )
+        assert len(caplog.records) == 1
+        assert (
+            caplog.records[0].getMessage()
+            == "APID 256 received sequence count: 16383 (expected: 0)"
+        )
+        assert framer_deframer.deframe(make_space_packet(apid, 0, b"wrap"))[0] == b"wrap"
+        assert len(caplog.records) == 1
+    warning_messages = [record.getMessage() for record in caplog.records]
+    assert "APID 256 received sequence count: 0 (expected: 16384)" not in warning_messages
+
 def test_chain_deframe_valid_packet(chain):
     """Test the raw-space-packet chain deframing a packet surrounded by garbage."""
     payload = b"0123456789"
