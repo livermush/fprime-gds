@@ -99,6 +99,17 @@ def test_deframe_sequence_count_warning(framer_deframer, caplog):
         assert framer_deframer.deframe(make_space_packet(0x100, 4, b"c"))[0] == b"c"
         assert len(caplog.records) == 1
 
+
+def test_deframe_sequence_count_resync_wraps_at_14_bits(framer_deframer, caplog):
+    """Gap resync after max sequence count wraps like flight ApidManager::calculateNextSeqCount."""
+    max_seq = SpacePacketFramerDeframer.SEQUENCE_COUNT_MAXIMUM - 1
+    with caplog.at_level(logging.WARNING, logger="framing"):
+        assert framer_deframer.deframe(make_space_packet(0x100, 0, b"a"))[0] == b"a"
+        assert framer_deframer.deframe(make_space_packet(0x100, max_seq, b"b"))[0] == b"b"
+        assert len(caplog.records) == 1
+        assert framer_deframer.deframe(make_space_packet(0x100, 0, b"c"))[0] == b"c"
+        assert len(caplog.records) == 1
+
 def test_chain_deframe_valid_packet(chain):
     """Test the raw-space-packet chain deframing a packet surrounded by garbage."""
     payload = b"0123456789"
