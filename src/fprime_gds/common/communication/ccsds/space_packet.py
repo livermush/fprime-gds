@@ -87,7 +87,7 @@ class SpacePacketFramerDeframer(FramerDeframer):
             # Set the sequence count to the next expected value (consider missing packets have been lost)
             self.apid_to_sequence_count_map[sp_header.apid] = (
                 sp_header.seq_count + 1
-            )
+            ) % self.SEQUENCE_COUNT_MAXIMUM
         deframed = struct.unpack_from(
             # data_len is number of bytes minus 1 per SpacePacket spec
             f">{sp_header.data_len + 1}s",
